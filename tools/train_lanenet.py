@@ -8,6 +8,8 @@
 """
 Train lanenet script
 """
+import sys
+sys.path.append("/home/iyu/lanenet-lane-detection-py2")
 import argparse
 import math
 import os
@@ -86,7 +88,7 @@ def load_pretrained_weights(variables, pretrained_weights_path, sess):
     assert ops.exists(pretrained_weights_path), '{:s} not exist'.format(pretrained_weights_path)
 
     pretrained_weights = np.load(
-        './data/vgg16.npy', encoding='latin1').item()
+        './data/vgg16.npy', encoding='latin1', allow_pickle=True).item()
 
     for vv in variables:
         weights_key = vv.name.split('/')[-3]
@@ -226,7 +228,7 @@ def train_lanenet(dataset_dir, weights_path=None, net_flag='vgg'):
         dataset_dir=dataset_dir, flags='val'
     )
 
-    with tf.device('/gpu:1'):
+    with tf.device('/gpu:0'):
         # set lanenet
         train_net = lanenet.LaneNet(net_flag=net_flag, phase='train', reuse=False)
         val_net = lanenet.LaneNet(net_flag=net_flag, phase='val', reuse=True)

@@ -43,12 +43,15 @@ def process_json_file(json_file_path, src_dir, ori_dst_dir, binary_dst_dir, inst
     assert ops.exists(json_file_path), '{:s} not exist'.format(json_file_path)
 
     image_nums = len(os.listdir(ori_dst_dir))
+    print "num images:", image_nums
+    print "json file path:", json_file_path
 
     with open(json_file_path, 'r') as file:
         for line_index, line in enumerate(file):
             info_dict = json.loads(line)
 
             image_dir = ops.split(info_dict['raw_file'])[0]
+	    print("line", line_index, line)
             image_dir_split = image_dir.split('/')[1:]
             image_dir_split.append(ops.split(info_dict['raw_file'])[1])
             image_name = '_'.join(image_dir_split)
@@ -139,31 +142,38 @@ def process_tusimple_dataset(src_dir):
     :param src_dir:
     :return:
     """
-    traing_folder_path = ops.join(src_dir, 'training')
+    training_folder_path = ops.join(src_dir, 'training')
     testing_folder_path = ops.join(src_dir, 'testing')
+    if os.path.exists(training_folder_path):
+	shutil.rmtree(training_folder_path)
+    if os.path.exists(testing_folder_path):
+	shutil.rmtree(testing_folder_path)
 
-    os.makedirs(traing_folder_path)
+    os.makedirs(training_folder_path)
     os.makedirs(testing_folder_path)
 
     for json_label_path in glob.glob('{:s}/label*.json'.format(src_dir)):
         json_label_name = ops.split(json_label_path)[1]
 
-        shutil.copyfile(json_label_path, ops.join(traing_folder_path, json_label_name))
+        shutil.copyfile(json_label_path, ops.join(training_folder_path, json_label_name))
+	print "json label name:", json_label_name
 
     for json_label_path in glob.glob('{:s}/test*.json'.format(src_dir)):
         json_label_name = ops.split(json_label_path)[1]
 
         shutil.copyfile(json_label_path, ops.join(testing_folder_path, json_label_name))
+	print "json label name:", json_label_name
 
-    gt_image_dir = ops.join(traing_folder_path, 'gt_image')
-    gt_binary_dir = ops.join(traing_folder_path, 'gt_binary_image')
-    gt_instance_dir = ops.join(traing_folder_path, 'gt_instance_image')
+    gt_image_dir = ops.join(training_folder_path, 'gt_image')
+    gt_binary_dir = ops.join(training_folder_path, 'gt_binary_image')
+    gt_instance_dir = ops.join(training_folder_path, 'gt_instance_image')
 
     os.makedirs(gt_image_dir)
     os.makedirs(gt_binary_dir)
     os.makedirs(gt_instance_dir)
 
-    for json_label_path in glob.glob('{:s}/*.json'.format(traing_folder_path)):
+    for json_label_path in glob.glob('{:s}/*.json'.format(training_folder_path)):
+	print "processing " + json_label_path
         process_json_file(json_label_path, src_dir, gt_image_dir, gt_binary_dir, gt_instance_dir)
 
     gen_train_sample(src_dir, gt_binary_dir, gt_instance_dir, gt_image_dir)

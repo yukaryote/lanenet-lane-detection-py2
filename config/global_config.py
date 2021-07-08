@@ -51,7 +51,7 @@ __C.TRAIN.CPU_MULTI_PROCESS_NUMS = 6
 # Set the train moving average decay
 __C.TRAIN.MOVING_AVERAGE_DECAY = 0.9999
 # Set the GPU nums
-__C.TRAIN.GPU_NUM = 2
+__C.TRAIN.GPU_NUM = 1  
 
 # Test options
 __C.TEST = edict()

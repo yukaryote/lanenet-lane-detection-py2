@@ -8,6 +8,8 @@
 """
 Lanenet data feed pip line
 """
+import sys
+sys.path.append("/home/iyu/lanenet-lane-detection-py2")
 import argparse
 import glob
 import os
