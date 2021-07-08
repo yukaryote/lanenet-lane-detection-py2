@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 # @Time    : 19-5-16 下午6:26
 # @Author  : MaybeShewill-CV
@@ -8,6 +8,8 @@
 """
 Evaluate lanenet model on tusimple lane dataset
 """
+import sys
+sys.path.append("/home/iyu/lanenet-lane-detection-py2")
 import argparse
 import glob
 import os
@@ -17,7 +19,7 @@ import time
 import cv2
 import glog as log
 import numpy as np
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 import tqdm
 
 from config import global_config
@@ -25,7 +27,7 @@ from lanenet_model import lanenet
 from lanenet_model import lanenet_postprocess
 
 CFG = global_config.cfg
-
+tf.disable_eager_execution()
 
 def init_args():
     """
@@ -50,8 +52,6 @@ def test_lanenet_batch(src_dir, weights_path, save_dir):
     """
     assert ops.exists(src_dir), '{:s} not exist'.format(src_dir)
 
-    os.makedirs(save_dir, exist_ok=True)
-
     input_tensor = tf.placeholder(dtype=tf.float32, shape=[1, 256, 512, 3], name='input_tensor')
 
     net = lanenet.LaneNet(phase='test', net_flag='vgg')
@@ -59,7 +59,7 @@ def test_lanenet_batch(src_dir, weights_path, save_dir):
 
     postprocessor = lanenet_postprocess.LaneNetPostProcessor()
 
-    saver = tf.train.Saver()
+    saver = tf.train.import_meta_graph(args.weights_path + ".meta")
 
     # Set sess configuration
     sess_config = tf.ConfigProto()
@@ -71,7 +71,7 @@ def test_lanenet_batch(src_dir, weights_path, save_dir):
 
     with sess.as_default():
 
-        saver.restore(sess=sess, save_path=weights_path)
+        saver.restore(sess=sess, save_path=args.weights_path)
 
         image_list = glob.glob('{:s}/**/*.jpg'.format(src_dir), recursive=True)
         avg_time_cost = []

@@ -8,6 +8,8 @@
 """
 Train lanenet script
 """
+import sys
+sys.path.append("/home/iyu/lanenet-lane-detection-py2/")
 import argparse
 import math
 import os
@@ -17,7 +19,7 @@ import time
 import cv2
 import glog as log
 import numpy as np
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 
 from config import global_config
 from data_provider import lanenet_data_feed_pipline
@@ -25,7 +27,7 @@ from lanenet_model import lanenet
 from tools import evaluate_model_utils
 
 CFG = global_config.cfg
-
+tf.disable_eager_execution()
 
 def init_args():
     """
@@ -86,7 +88,7 @@ def load_pretrained_weights(variables, pretrained_weights_path, sess):
     assert ops.exists(pretrained_weights_path), '{:s} not exist'.format(pretrained_weights_path)
 
     pretrained_weights = np.load(
-        './data/vgg16.npy', encoding='latin1').item()
+        './data/vgg16.npy', encoding='latin1', allow_pickle=True).item()
 
     for vv in variables:
         weights_key = vv.name.split('/')[-3]
@@ -226,7 +228,7 @@ def train_lanenet(dataset_dir, weights_path=None, net_flag='vgg'):
         dataset_dir=dataset_dir, flags='val'
     )
 
-    with tf.device('/gpu:1'):
+    with tf.device('/gpu:0'):
         # set lanenet
         train_net = lanenet.LaneNet(net_flag=net_flag, phase='train', reuse=False)
         val_net = lanenet.LaneNet(net_flag=net_flag, phase='val', reuse=True)

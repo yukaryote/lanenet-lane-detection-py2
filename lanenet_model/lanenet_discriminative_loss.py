@@ -8,7 +8,7 @@
 """
 Discriminative Loss for instance segmentation
 """
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 
 
 def discriminative_loss_single(

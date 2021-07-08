@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 # @Time    : 18-5-23 上午11:33
 # @Author  : MaybeShewill-CV
@@ -8,6 +8,8 @@
 """
 test LaneNet model on single image
 """
+import sys
+sys.path.append("/home/iyu/lanenet-lane-detection-py2")
 import argparse
 import os.path as ops
 import time
@@ -16,14 +18,14 @@ import cv2
 import glog as log
 import matplotlib.pyplot as plt
 import numpy as np
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 
 from config import global_config
 from lanenet_model import lanenet
 from lanenet_model import lanenet_postprocess
 
 CFG = global_config.cfg
-
+tf.disable_eager_execution()
 
 def init_args():
     """

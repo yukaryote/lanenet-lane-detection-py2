@@ -8,7 +8,7 @@
 """
 The base convolution neural networks mainly implement some useful cnn functions
 """
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 import numpy as np
 
 
@@ -63,7 +63,7 @@ class CNNBaseModel(object):
                     else [1, 1, stride, stride]
 
             if w_init is None:
-                w_init = tf.contrib.layers.variance_scaling_initializer()
+                w_init = tf.keras.initializers.VarianceScaling(scale=2.0)
             if b_init is None:
                 b_init = tf.constant_initializer()
 

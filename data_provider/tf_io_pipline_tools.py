@@ -8,13 +8,15 @@
 """
 tensorflow io pip line tools
 """
+import sys
+sys.path.append("/home/iyu/lanenet-lane-detection-py2")
 import os
 import os.path as ops
 
 import cv2
 import glog as log
 import numpy as np
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 
 from config import global_config
 
@@ -106,7 +108,7 @@ def decode(serialized_example):
     :param serialized_example:
     :return:
     """
-    features = tf.parse_single_example(
+    features = tf.io.parse_single_example(
         serialized_example,
         # Defaults are not specified since both keys are required.
         features={

@@ -8,7 +8,7 @@
 """
 Implement LaneNet Model
 """
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 
 from config import global_config
 from data_provider import lanenet_data_feed_pipline

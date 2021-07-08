@@ -8,6 +8,8 @@
 """
 Lanenet data feed pip line
 """
+import sys
+sys.path.append("/home/iyu/lanenet-lane-detection-py2")
 import argparse
 import glob
 import os
@@ -15,7 +17,7 @@ import os.path as ops
 import random
 
 import glog as log
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 
 from config import global_config
 from data_provider import tf_io_pipline_tools
